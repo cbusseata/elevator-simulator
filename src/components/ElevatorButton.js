@@ -1,0 +1,27 @@
+import React from 'react';
+import styled from 'styled-components';
+
+function ElevatorButton(props) {
+    return (
+        <ElevatorButtonElement>
+            {props.display}
+        </ElevatorButtonElement>
+    );
+}
+
+const ElevatorButtonElement = styled.button`
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+    background-color: ${props => props.lit ? 'yellow' : '#FFF'};
+    border: 1px solid #AAA;
+
+    :active {
+        background-color: yellow;
+    }
+`;
+
+export default ElevatorButton;

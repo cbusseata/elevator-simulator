@@ -1,0 +1,107 @@
+body {
+    background-color: #FFF;
+}
+
+h1 {
+    margin-left: 50px;
+}
+
+.building {
+    float: left;
+    margin-top: 20px;
+    margin-left: 50px;
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(3, 100px);
+    grid-auto-rows: minmax(100px, 100px);
+    grid-gap: 10px;
+    background-color: #555;
+    border: 1px solid #000;
+    color: white;
+    max-width: 320px;
+}
+
+.floor {
+    grid-column: 1 / span 3;
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: 100px;
+    grid-gap: 10px;
+}
+
+.room {
+    grid-column: auto;
+    background-color: #DDD;
+    position: relative;
+}
+
+button {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    text-align: center;
+    position: absolute;
+}
+
+.room button.up {
+    top: 15px;
+}
+
+.room button.down {
+    bottom: 15px;
+}
+
+.room.left button {
+    right: 10px;
+}
+
+.room.right button {
+    left: 10px;
+}
+
+.shaft {
+    background-color: #333;
+    position: absolute;
+    grid-column: 2 / 3;
+    grid-row: 1 / span 5;
+    width: 100%;
+    height: 100%;
+}
+
+.car {
+    position: absolute;
+    left: 10px;
+    top: 450px;
+    width: 80px;
+    height: 80px;
+    background-color: #666;
+    border: 1px solid #666;
+}
+
+.car .door {
+    position: absolute;
+    width: 30px;
+    height: 60px;
+    bottom: 1px;
+    background-color: #000;
+}
+
+.door.left {
+    right: 8px;
+}
+.door.right {
+    left: 8px;
+}
+
+.panel {
+    float: left;
+    margin-top: 20px;
+    margin-left: 50px;
+    background-color: #cd7f32;
+    padding: 30px;
+}
+
+.panel table td {
+    padding: 5px;
+}
