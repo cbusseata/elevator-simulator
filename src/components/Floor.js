@@ -6,19 +6,19 @@ function Floor(props) {
     return (
         <FloorElement>
             <Room 
+                floorNumber={props.floorNumber}
                 side="left" 
                 onTopFloor={props.isTopFloor || false}
-                onBottomFloor={props.isBottomFloor || false}
             />
             <Room 
+                floorNumber={props.floorNumber}
                 side="middle" 
                 onTopFloor={props.isTopFloor || false}
-                onBottomFloor={props.isBottomFloor || false}
             />
             <Room 
+                floorNumber={props.floorNumber}
                 side="right" 
                 onTopFloor={props.isTopFloor || false}
-                onBottomFloor={props.isBottomFloor || false}
             />
         </FloorElement>
     );

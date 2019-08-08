@@ -7,8 +7,9 @@ function Room(props) {
         <RoomElement className={props.side}>
             <RoomButtonPanel 
                 side={props.side} 
+                floorNumber={props.floorNumber}
                 showUp={!props.onTopFloor}
-                showDown={!props.onBottomFloor}
+                showDown={props.floorNumber !== 1}
             />
         </RoomElement>
     );

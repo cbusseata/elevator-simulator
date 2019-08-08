@@ -3,7 +3,10 @@ import styled from 'styled-components';
 
 function ElevatorButton(props) {
     return (
-        <ElevatorButtonElement onClick={props.onClick} lit={props.lit || false}>
+        <ElevatorButtonElement 
+            onClick={props.onClick} 
+            lit={props.lit || false}
+        >
             {props.display}
         </ElevatorButtonElement>
     );

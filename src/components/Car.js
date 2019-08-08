@@ -1,24 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
-function Car() {
+function Car(props) {
     return (
-        <CarElement>
+        <CarElement currentFloor={props.currentFloor}>
             <DoorElement side="left" />
             <DoorElement side="right" />
         </CarElement>
     );
 }
 
-const CarElement = styled.div`
-    position: absolute;
-    left: 10px;
-    top: 450px;
-    width: 80px;
-    height: 80px;
-    background-color: #666;
-    border: 1px solid #666;
-`;
+const CarElement = styled.div(props => ({
+    position: 'absolute',
+    left: '10px',
+    bottom: (((props.currentFloor-1)*110)+10)+'px',
+    width: '80px',
+    height: '80px',
+    backgroundColor: '#666',
+    border: '1px solid #666',
+}));
 
 const DoorElement = styled.div(props => ({
     position: 'absolute',
@@ -29,4 +30,10 @@ const DoorElement = styled.div(props => ({
     [props.side === 'left' ? 'right' : 'left']: '8px',
 }));
 
-export default Car;
+const mapStateToProps = (state, props) => {
+    return {
+        currentFloor: state['car']['currentFloor'],
+    };
+};
+
+export default connect(mapStateToProps)(Car);

@@ -1,16 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
 import ElevatorButton from './ElevatorButton';
+import { connect } from 'react-redux';
+import { setButtonsActive } from '../actions/floor-actions';
+import { addStop } from '../actions/car-actions';
+import { bindActionCreators } from 'redux';
 
 function RoomButtonPanel(props) {
+    const panelButtonPressed = (floor, direction) => {
+        props.setFloorButtonsActive(floor, direction);
+        props.carAddStop(floor);
+    }
+
     return (
         <RoomButtonPanelElement side={props.side}>
             <RoomButtonPanelUpContainerElement showUp={props.showUp}>
-                <ElevatorButton display="^" />
+                <ElevatorButton 
+                    display="^" 
+                    onClick={() => panelButtonPressed(props.floorNumber, 'up')} 
+                    lit={props.buttonsActive && props.buttonsActive['upButtonsActive'] ? true : false}
+                />
             </RoomButtonPanelUpContainerElement>
 
             <RoomButtonPanelDownContainerElement showDown={props.showDown}>
-                <ElevatorButton display="v" />
+                <ElevatorButton 
+                    display="v" 
+                    onClick={() => panelButtonPressed(props.floorNumber, 'down')} 
+                    lit={props.buttonsActive && props.buttonsActive['downButtonsActive'] ? true : false}
+                />
             </RoomButtonPanelDownContainerElement>
         </RoomButtonPanelElement>
     );
@@ -42,4 +59,18 @@ const RoomButtonPanelDownContainerElement = styled.div(props => ({
     visibility: props.showDown ? 'visible' : 'hidden',
 }));
 
-export default RoomButtonPanel;
+const mapStateToProps = (state, props) => {
+    return {
+        buttonsActive: state['floor'][props.floorNumber],
+        numFloors: props.numFloors,
+    };
+};
+
+const mapActionsToProps = (dispatch, props) => {
+    return bindActionCreators({
+        setFloorButtonsActive: setButtonsActive,
+        carAddStop: addStop,
+    }, dispatch);
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(RoomButtonPanel);

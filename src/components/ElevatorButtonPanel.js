@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import ElevatorButton from './ElevatorButton';
 import { connect } from 'react-redux';
 import { setButtonActive } from '../actions/buttonPanel-actions';
-import { bindActionCreators } from '../../../Library/Caches/typescript/3.5/node_modules/redux';
+import { addStop } from '../actions/car-actions';
+import { bindActionCreators } from 'redux';
 
 function ElevatorButtonPanel(props) {
-    const panelButtonPressed = (i) => {
-        props.onPanelButtonPressed(i);
+    const panelButtonPressed = (floorNumber) => {
+        props.setPanelButtonActive(floorNumber);
+        props.carAddStop(floorNumber);
     }
 
     const renderElevatorButtonTd = (i) => {
@@ -87,7 +89,8 @@ const mapStateToProps = (state, props) => {
 
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
-        onPanelButtonPressed: setButtonActive
+        setPanelButtonActive: setButtonActive,
+        carAddStop: addStop,
     }, dispatch);
 };
 

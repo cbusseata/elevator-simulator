@@ -7,20 +7,17 @@ function Building(props) {
     const floors = [];
     for (let i = 1; i <= props.numFloors; i++) {
         let isTopFloor = false;
-        let isBottomFloor = false;
 
         // If we do it this way, the key tag matches the floor number
-        if (i === 1) {
-            isBottomFloor = true;
-        } else if (i === props.numFloors) {
+        if (i === props.numFloors) {
             isTopFloor = true;
         }
 
         floors.push(
             <Floor 
                 key={i}
+                floorNumber={i}
                 isTopFloor={isTopFloor}
-                isBottomFloor={isBottomFloor}
             />
         );
     }
