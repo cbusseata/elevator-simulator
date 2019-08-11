@@ -1,4 +1,4 @@
-import { ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED } from '../actions/car-actions';
+import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED } from '../actions/car-actions';
 
 export default function carReducer(state = {}, { type, payload }) {
     let newState = Object.assign({}, state);
@@ -6,7 +6,20 @@ export default function carReducer(state = {}, { type, payload }) {
         newState['stops'] = state['stops'].slice(0);
     }
 
+    if (state['buttonPanelButtonsActive'] && state['buttonPanelButtonsActive'].length > 0) {
+        newState['buttonPanelButtonsActive'] = state['buttonPanelButtonsActive'].slice(0);
+    }
+
     switch (type) {
+        case SET_BUTTON_ACTIVE:
+            if (newState['buttonPanelButtonsActive'].includes(payload.floorNumber)) {
+                return newState;
+            }
+            
+            newState['buttonPanelButtonsActive'].push(payload.floorNumber);
+            
+            return newState;
+            
         case ADD_STOP:
             if (newState['currentFloor'] === payload.floorNumber) {
                 // We are already at this floor
@@ -52,6 +65,14 @@ export default function carReducer(state = {}, { type, payload }) {
                     newState['stops'][0]
                 ) :
                 null;
+
+            // Remove from active button panel buttons
+            if (newState['buttonPanelButtonsActive'].includes(payload.floorNumber)) {
+                newState['buttonPanelButtonsActive'].splice(
+                    newState['buttonPanelButtonsActive'].indexOf(payload.floorNumber),
+                    1
+                );
+            }
 
             console.log('FLOOR_REACHED', newState);
             return newState;
