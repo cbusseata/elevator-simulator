@@ -24,8 +24,8 @@ const store = createStore(
             buttonsActive: [],
         },
         car: {
-            //isMoving: false,
-            //direction: null,
+            isMoving: false,
+            direction: null,
             currentFloor: 1,
             stops: [],
         },

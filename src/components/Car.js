@@ -1,8 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { moveToFloor, floorReached } from '../actions/car-actions';
+import { bindActionCreators } from 'redux';
 
 function Car(props) {
+    console.log('Car', props);
+
+    if (props.isMoving) {
+        console.log('Car', 'isMoving');
+        if (props.currentFloor !== props.nextFloor) {
+            let floorToMoveTo = props.nextFloor > props.currentFloor ?
+                props.currentFloor + 1 :
+                props.currentFloor - 1;
+
+            // Move
+            setTimeout(function () {
+                props.moveToFloor(floorToMoveTo);
+            }, 1000);
+        } else {
+            // Floor reached
+            props.floorReached(props.nextFloor);
+        }
+    }
+
     return (
         <CarElement currentFloor={props.currentFloor}>
             <DoorElement side="left" />
@@ -32,8 +53,18 @@ const DoorElement = styled.div(props => ({
 
 const mapStateToProps = (state, props) => {
     return {
+        isMoving: state['car']['isMoving'],
+        direction: state['car']['direction'],
         currentFloor: state['car']['currentFloor'],
+        nextFloor: state['car']['stops'] ? state['car']['stops'][0] : null,
     };
 };
 
-export default connect(mapStateToProps)(Car);
+const mapActionsToProps = (dispatch, props) => {
+    return bindActionCreators({
+        moveToFloor: moveToFloor,
+        floorReached: floorReached,
+    }, dispatch);
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(Car);
