@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import ElevatorButton from './ElevatorButton';
 import { connect } from 'react-redux';
-import { setButtonActive, addStop } from '../actions/car-actions';
+import { setButtonActive, addStop } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
-function ElevatorButtonPanel(props) {
+function CarButtonPanel(props) {
     const panelButtonPressed = (floorNumber) => {
         if (floorNumber === props.carCurrentFloor) {
             return;
@@ -84,9 +84,9 @@ const PanelTdElement = styled.td`
 
 const mapStateToProps = (state, props) => {
     return {
-        buttonsActive: state['car']['buttonPanelButtonsActive'],
+        buttonsActive: state['buttonPanelButtonsActive'],
         numFloors: props.numFloors,
-        carCurrentFloor: state['car']['currentFloor'],
+        carCurrentFloor: state['currentFloor'],
     };
 };
 
@@ -97,4 +97,4 @@ const mapActionsToProps = (dispatch, props) => {
     }, dispatch);
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(ElevatorButtonPanel);
+export default connect(mapStateToProps, mapActionsToProps)(CarButtonPanel);

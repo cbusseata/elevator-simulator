@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Building from './components/Building';
-import ElevatorButtonPanel from './components/ElevatorButtonPanel';
+import CarButtonPanel from './components/CarButtonPanel';
 
 function App() {
     return (
@@ -10,7 +10,7 @@ function App() {
                 <h1>Elevator Simulator</h1>
             </div>
             <Building numFloors={5} />
-            <ElevatorButtonPanel numFloors={5} />
+            <CarButtonPanel numFloors={5} />
         </div>
     );
 }

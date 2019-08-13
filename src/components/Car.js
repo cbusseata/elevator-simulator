@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { moveToFloor, floorReached } from '../actions/car-actions';
+import { moveToFloor, floorReached } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
 function Car(props) {
@@ -53,10 +53,10 @@ const DoorElement = styled.div(props => ({
 
 const mapStateToProps = (state, props) => {
     return {
-        isMoving: state['car']['isMoving'],
-        direction: state['car']['direction'],
-        currentFloor: state['car']['currentFloor'],
-        nextFloor: state['car']['stops'] ? state['car']['stops'][0] : null,
+        isMoving: state['isMoving'],
+        direction: state['direction'],
+        currentFloor: state['currentFloor'],
+        nextFloor: state['stops'] ? state['stops'][0] : null,
     };
 };
 

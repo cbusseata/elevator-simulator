@@ -1,4 +1,4 @@
-import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED, SET_FLOOR_BUTTONS_ACTIVE } from '../actions/car-actions';
+import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED, SET_FLOOR_BUTTONS_ACTIVE } from '../actions/elevator-actions';
 const elevator = require('../domain/elevator');
 
 export default function carReducer(state = {}, { type, payload }) {

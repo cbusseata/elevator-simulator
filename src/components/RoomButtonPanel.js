@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ElevatorButton from './ElevatorButton';
 import { connect } from 'react-redux';
-import { setFloorButtonsActive, addStop } from '../actions/car-actions';
+import { setFloorButtonsActive, addStop } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
 function RoomButtonPanel(props) {
@@ -60,7 +60,7 @@ const RoomButtonPanelDownContainerElement = styled.div(props => ({
 
 const mapStateToProps = (state, props) => {
     return {
-        buttonsActive: state['car']['floorButtonPanels'][props.floorNumber],
+        buttonsActive: state['floorButtonPanels'][props.floorNumber],
         numFloors: props.numFloors,
     };
 };
