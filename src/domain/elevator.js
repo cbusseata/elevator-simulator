@@ -1,6 +1,6 @@
 'use strict';
 
-function addStopToQueue(currentFloor, stops = [], newStop) {
+function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFromStop = null) {
     if (currentFloor === newStop) {
         // We are already at this floor
         return stops;
@@ -29,8 +29,11 @@ function addStopToQueue(currentFloor, stops = [], newStop) {
         let direction = getDirectionFromStopToStop(stops[i - 1], stops[i]);
 
         if (
-            (direction === 'up' && stops[i - 1] < newStop && newStop < stops[i]) ||
-            (direction === 'down' && stops[i - 1] > newStop && newStop > stops[i])
+            (intendedDirectionFromStop === null || intendedDirectionFromStop === direction) &&
+            (
+                (direction === 'up' && stops[i - 1] < newStop && newStop < stops[i]) ||
+                (direction === 'down' && stops[i - 1] > newStop && newStop > stops[i])
+            )
         ) {
             break;
         }

@@ -1,20 +1,55 @@
-import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED } from '../actions/car-actions';
+import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED, SET_FLOOR_BUTTONS_ACTIVE } from '../actions/car-actions';
 const elevator = require('../domain/elevator');
 
 export default function carReducer(state = {}, { type, payload }) {
     let newState = Object.assign({}, state);
+
     if (state['stops'] && state['stops'].length > 0) {
         newState['stops'] = state['stops'].slice(0);
     } else {
         newState['stops'] = [];
     }
 
+    if (state['floorButtonPanels'] && state['floorButtonPanels'].length > 0) {
+        newState['floorButtonPanels'] = state['floorButtonPanels'].slice(0);
+    } else {
+        newState['floorButtonPanels'] = [];
+    }
+
     if (state['buttonPanelButtonsActive'] && state['buttonPanelButtonsActive'].length > 0) {
         newState['buttonPanelButtonsActive'] = state['buttonPanelButtonsActive'].slice(0);
+    } else {
+        newState['buttonPanelButtonsActive'] = [];
     }
 
     switch (type) {
+        case SET_FLOOR_BUTTONS_ACTIVE:
+            if (payload.floorNumber === newState['currentFloor']) {
+                console.log('SET_FLOOR_BUTTONS_ACTIVE', 'We are already on this floor');
+                return newState;
+            }
+
+            let buttonState;
+            if (newState['floorButtonPanels'][payload.floorNumber]) {
+                buttonState = Object.assign({}, newState['floorButtonPanels'][payload.floorNumber]);
+            } else {
+                // Create a new object with the correct default values set
+                buttonState = {
+                    'upButtonsActive': false, 
+                    'downButtonsActive': false
+                };
+            }
+            
+            buttonState[payload.direction+'ButtonsActive'] = true;
+            newState['floorButtonPanels'][payload.floorNumber] = buttonState;
+
+            return newState;
+
         case SET_BUTTON_ACTIVE:
+            if (payload.floorNumber === newState['currentFloor']) {
+                return newState;
+            }
+
             if (newState['buttonPanelButtonsActive'].includes(payload.floorNumber)) {
                 return newState;
             }
@@ -38,7 +73,12 @@ export default function carReducer(state = {}, { type, payload }) {
 
             // @TODO: logic around direction the elevator is going and inserting the
             //        stop in a logical fashion
-            newState['stops'] = elevator.addStopToQueue(newState['currentFloor'], newState['stops'], payload.floorNumber);
+            newState['stops'] = elevator.addStopToQueue(
+                newState['currentFloor'], 
+                newState['stops'], 
+                payload.floorNumber,
+                payload.intendedDirectionFromStop
+            );
 
             // Set a new direction regardless
             newState['direction'] = getDirection(
@@ -77,6 +117,10 @@ export default function carReducer(state = {}, { type, payload }) {
                     1
                 );
             }
+            newState['floorButtonPanels'][payload.floorNumber] = {
+                'upButtonsActive': false, 
+                'downButtonsActive': false
+            };
 
             console.log('FLOOR_REACHED', newState);
             return newState;
