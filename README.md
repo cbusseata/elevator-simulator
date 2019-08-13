@@ -10,3 +10,7 @@ npm install
 npm start
 ````
 
+To run tests:
+````bash
+npm test
+````
