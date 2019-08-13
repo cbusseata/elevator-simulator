@@ -1,4 +1,6 @@
-export default function addStopToQueue(currentFloor, stops = [], newStop) {
+'use strict';
+
+function addStopToQueue(currentFloor, stops = [], newStop) {
     if (currentFloor === newStop) {
         // We are already at this floor
         return stops;
@@ -67,3 +69,7 @@ function getDirectionFromStopToStop(stop1, stop2) {
 
     return direction;
 }
+
+module.exports = {
+    addStopToQueue: addStopToQueue,
+};

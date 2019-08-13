@@ -1,5 +1,5 @@
 import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED } from '../actions/car-actions';
-import addStopToQueue from '../domain/elevator';
+const elevator = require('../domain/elevator');
 
 export default function carReducer(state = {}, { type, payload }) {
     let newState = Object.assign({}, state);
@@ -38,7 +38,7 @@ export default function carReducer(state = {}, { type, payload }) {
 
             // @TODO: logic around direction the elevator is going and inserting the
             //        stop in a logical fashion
-            newState['stops'] = addStopToQueue(newState['currentFloor'], newState['stops'], payload.floorNumber);
+            newState['stops'] = elevator.addStopToQueue(newState['currentFloor'], newState['stops'], payload.floorNumber);
 
             // Set a new direction regardless
             newState['direction'] = getDirection(
