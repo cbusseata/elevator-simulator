@@ -1,9 +1,12 @@
 import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED } from '../actions/car-actions';
+import addStopToQueue from '../domain/elevator';
 
 export default function carReducer(state = {}, { type, payload }) {
     let newState = Object.assign({}, state);
     if (state['stops'] && state['stops'].length > 0) {
         newState['stops'] = state['stops'].slice(0);
+    } else {
+        newState['stops'] = [];
     }
 
     if (state['buttonPanelButtonsActive'] && state['buttonPanelButtonsActive'].length > 0) {
@@ -35,15 +38,16 @@ export default function carReducer(state = {}, { type, payload }) {
 
             // @TODO: logic around direction the elevator is going and inserting the
             //        stop in a logical fashion
-            newState['stops'] = state['stops'].slice(0);
-            newState['stops'].push(payload.floorNumber);
-            // We want to be "moving" if there are any stops in the queue
-            newState['isMoving'] = true;
-            // Determine the direction
+            newState['stops'] = addStopToQueue(newState['currentFloor'], newState['stops'], payload.floorNumber);
+
+            // Set a new direction regardless
             newState['direction'] = getDirection(
                 newState['currentFloor'], 
                 newState['stops'][0]
             )
+
+            // We want to be "moving" if there are any stops in the queue
+            newState['isMoving'] = true;
             
             console.log('ADD_STOP', newState);
             return newState;
