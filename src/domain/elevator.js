@@ -6,8 +6,9 @@ function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFrom
         return stops;
     }
 
-    if (stops.includes(newStop)) {
-        // This stop is already queued up, do nothing
+    if (stops.includes(newStop) && intendedDirectionFromStop === null) {
+        // This stop is already queued up, and there is no intended direction, so we do not
+        //  need to look into moving it up in the queue, do nothing
         return stops;
     }
 
@@ -27,6 +28,13 @@ function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFrom
 
     while (i < stops.length) {
         let direction = getDirectionFromStopToStop(stops[i - 1], stops[i]);
+
+        if (intendedDirectionFromStop !== null && stops[i] === newStop) {
+            // In the case we have an intended direction, we might be trying to queue the stop
+            //  up for earlier in the queue, so we need to check and bail if we've arrived at the
+            //  index that the stop is queued up at
+            return stops;
+        }
 
         if (
             (intendedDirectionFromStop === null || intendedDirectionFromStop === direction) &&
@@ -58,8 +66,19 @@ function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFrom
     // Add the new stop wherever i ended up at
     stops.splice(i, 0, newStop);
 
+    if (intendedDirectionFromStop !== null && stops.lastIndexOf(newStop) > i) {
+        // In the case we have an intended direction, we have queued the stop up for earlier 
+        //  in the queue, so now we need to remove the later instance
+        stops.splice(
+            stops.lastIndexOf(newStop),
+            1
+        );
+    }
+
     // Remove the current floor from the beginning of the queue
     stops.shift();
+
+    //console.log('addStopToQueue', stops);
 
     return stops;
 }

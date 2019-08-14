@@ -65,14 +65,6 @@ export default function carReducer(state = {}, { type, payload }) {
                 return newState;
             }
 
-            if (newState['stops'].includes(payload.floorNumber)) {
-                // This stop is already queued up, do nothing
-                console.log('ADD_STOP', 'floor already queued up');
-                return newState;
-            }
-
-            // @TODO: logic around direction the elevator is going and inserting the
-            //        stop in a logical fashion
             newState['stops'] = elevator.addStopToQueue(
                 newState['currentFloor'], 
                 newState['stops'], 

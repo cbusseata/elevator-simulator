@@ -32,10 +32,14 @@ function Car(props) {
     );
 }
 
+function getCarAbsoluteBottomPxAtFloor(floorNumber) {
+    return ((floorNumber - 1) * 110) + 10;
+}
+
 const CarElement = styled.div(props => ({
     position: 'absolute',
     left: '10px',
-    bottom: (((props.currentFloor-1)*110)+10)+'px',
+    bottom: getCarAbsoluteBottomPxAtFloor(props.currentFloor)+'px',
     width: '80px',
     height: '80px',
     backgroundColor: '#666',
