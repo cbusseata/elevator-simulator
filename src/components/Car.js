@@ -1,23 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { moveToFloor, floorReached } from '../actions/elevator-actions';
+import { floorReached } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
 function Car(props) {
     console.log('Car', props);
 
-    if (props.isMoving) {
-        console.log('Car', 'isMoving');
-        if (props.currentFloor !== props.nextFloor) {
-            let floorToMoveTo = props.nextFloor > props.currentFloor ?
-                props.currentFloor + 1 :
-                props.currentFloor - 1;
+    const [carBottomY, setCarBottomY] = useState(getCarBottomYAtFloor(props.currentFloor));
 
-            // Move
-            setTimeout(function () {
-                props.moveToFloor(floorToMoveTo);
-            }, 1000);
+    if (props.isMoving) {
+        if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
+            let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
+
+            window.requestAnimationFrame(
+                () => {
+                    setCarBottomY(carBottomY + yChange);
+                }
+            );
         } else {
             // Floor reached
             props.floorReached(props.nextFloor);
@@ -25,21 +25,23 @@ function Car(props) {
     }
 
     return (
-        <CarElement currentFloor={props.currentFloor}>
+        <CarElement 
+            currentFloor={props.currentFloor} 
+            style={{bottom: carBottomY+'px'}}
+        >
             <DoorElement side="left" />
             <DoorElement side="right" />
         </CarElement>
     );
 }
 
-function getCarAbsoluteBottomPxAtFloor(floorNumber) {
+function getCarBottomYAtFloor(floorNumber) {
     return ((floorNumber - 1) * 110) + 10;
 }
 
 const CarElement = styled.div(props => ({
     position: 'absolute',
     left: '10px',
-    bottom: getCarAbsoluteBottomPxAtFloor(props.currentFloor)+'px',
     width: '80px',
     height: '80px',
     backgroundColor: '#666',
@@ -66,7 +68,6 @@ const mapStateToProps = (state, props) => {
 
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
-        moveToFloor: moveToFloor,
         floorReached: floorReached,
     }, dispatch);
 };

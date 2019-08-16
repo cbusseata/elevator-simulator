@@ -1,4 +1,4 @@
-import { SET_BUTTON_ACTIVE, ADD_STOP, MOVE_TO_FLOOR, FLOOR_REACHED, SET_FLOOR_BUTTONS_ACTIVE } from '../actions/elevator-actions';
+import { SET_BUTTON_ACTIVE, ADD_STOP, FLOOR_REACHED, SET_FLOOR_BUTTONS_ACTIVE } from '../actions/elevator-actions';
 const elevator = require('../domain/elevator');
 
 export default function carReducer(state = {}, { type, payload }) {
@@ -82,12 +82,6 @@ export default function carReducer(state = {}, { type, payload }) {
             newState['isMoving'] = true;
             
             console.log('ADD_STOP', newState);
-            return newState;
-
-        case MOVE_TO_FLOOR:
-            newState['currentFloor'] = payload.floorNumber;
-
-            console.log('MOVE_TO_FLOOR', newState);
             return newState;
 
         case FLOOR_REACHED:
