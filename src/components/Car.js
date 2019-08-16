@@ -5,11 +5,9 @@ import { floorReached } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
 function Car(props) {
-    console.log('Car', props);
-
     const [carBottomY, setCarBottomY] = useState(getCarBottomYAtFloor(props.currentFloor));
 
-    if (props.isMoving) {
+    if (props.status) {
         if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
             let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
 
@@ -55,8 +53,7 @@ const DoorElement = styled.div(props => ({
 
 const mapStateToProps = (state, props) => {
     return {
-        isMoving: state['isMoving'],
-        direction: state['direction'],
+        status: state['status'],
         currentFloor: state['currentFloor'],
         nextFloor: state['stops'] ? state['stops'][0] : null,
     };

@@ -72,14 +72,8 @@ export default function carReducer(state = {}, { type, payload }) {
                 payload.intendedDirectionFromStop
             );
 
-            // Set a new direction regardless
-            newState['direction'] = getDirection(
-                newState['currentFloor'], 
-                newState['stops'][0]
-            )
-
             // We want to be "moving" if there are any stops in the queue
-            newState['isMoving'] = true;
+            newState['status'] = true;
             
             console.log('ADD_STOP', newState);
             return newState;
@@ -88,13 +82,7 @@ export default function carReducer(state = {}, { type, payload }) {
             newState['currentFloor'] = payload.floorNumber;
             // Basically, pop the next floor off
             newState['stops'] = state['stops'].slice(1);
-            newState['isMoving'] = newState['stops'].length > 0 ? true : false;
-            newState['direction'] = newState['stops'].length > 0 ? 
-                getDirection(
-                    newState['currentFloor'], 
-                    newState['stops'][0]
-                ) :
-                null;
+            newState['status'] = newState['stops'].length > 0 ? true : false;
 
             // Remove from active button panel buttons
             if (newState['buttonPanelButtonsActive'].includes(payload.floorNumber)) {
@@ -114,8 +102,4 @@ export default function carReducer(state = {}, { type, payload }) {
         default:
             return newState;
     }
-}
-
-function getDirection(currentFloor, nextFloor) {
-    return nextFloor - currentFloor > 0 ? 'up' : 'down';
 }
