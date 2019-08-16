@@ -13,11 +13,7 @@ function Car(props) {
         if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
             let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
 
-            window.requestAnimationFrame(
-                () => {
-                    setCarBottomY(carBottomY + yChange);
-                }
-            );
+            window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
         } else {
             // Floor reached
             props.floorReached(props.nextFloor);
