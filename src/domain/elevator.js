@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Given some data about current floor, a stop to add, and an array of stops, returns a new array of stops.
  * 

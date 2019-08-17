@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -9,7 +8,7 @@ import elevatorReducer from './reducers/elevator-reducer';
 const store = createStore(
     elevatorReducer,
     {
-        status: 'idle',
+        status: 'idle', // idle, moving, or disembarking
         currentFloor: 1,
         stops: [],
         buttonPanelButtonsActive: [],

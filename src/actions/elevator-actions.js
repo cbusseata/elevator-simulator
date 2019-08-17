@@ -5,6 +5,8 @@ export const SET_FLOOR_BUTTONS_ACTIVE = 'elevator:set-floor-buttons-active';
 export const FINISHED_DISEMBARKING = 'elevator:finished-disembarking';
 
 /**
+ * Creates the event that intends to set a button on the elevator car's button panel to active.
+ * 
  * @param {number} floorNumber 
  * 
  * @return {Object}
@@ -19,8 +21,13 @@ export function setCarPanelButtonActive(floorNumber) {
 }
 
 /**
+ * Creates the event that intends to add a stop to the queue of stops.
+ * 
  * @param {number}  floorNumber 
- * @param {string=} intendedDirectionFromStop
+ * @param {string=} intendedDirectionFromStop Optional.  The intended direction to go from the floor
+ *                                             number, as is indicated by buttons on the individual
+ *                                             floor button panel.  This will be null when adding a
+ *                                             a stop originating from a car's button panel.
  * 
  * @return {Object}
  */
@@ -35,6 +42,8 @@ export function addStop(floorNumber, intendedDirectionFromStop = null) {
 }
 
 /**
+ * Creates the event that notifies that a floor has been reached.
+ * 
  * @param {number} floorNumber 
  * 
  * @return {Object}
@@ -49,8 +58,11 @@ export function floorReached(floorNumber) {
 }
 
 /**
- * @param {number} floorNumber 
- * @param {string} direction
+ * Creates the event that intends to set the buttons with the given direction on a particular floor
+ *  to active.  Each floor's set of buttons are linked.
+ * 
+ * @param {number} floorNumber
+ * @param {string} direction   'up' or 'down'
  * 
  * @return {Object}
  */
@@ -65,6 +77,8 @@ export function setFloorButtonsActive(floorNumber, direction) {
 }
 
 /**
+ * Creates the event that notifies that the car has finished disembarking (opening/closing doors).
+ * 
  * @return {Object}
  */
 export function finishedDisembarking() {

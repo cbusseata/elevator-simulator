@@ -7,29 +7,34 @@ import Shaft from './Shaft';
  * The entire building.
  */
 function Building(props) {
-    const floors = [];
-    for (let i = 1; i <= props.numFloors; i++) {
-        let isTopFloor = false;
+    /**
+     * Construct the array of jsx Floor elements, given a number of floors to render
+     * 
+     * @param {number} numFloors 
+     * 
+     * @return {Array}
+     */
+    const renderFloors = (numFloors) => {
+        const floors = [];
 
-        // If we do it this way, the key tag matches the floor number
-        if (i === props.numFloors) {
-            isTopFloor = true;
+        // We start at numFloors and count down to 1 so that the key tag matches the 
+        //  floor number
+        for (let i = numFloors; i >= 1; i--) {
+            floors.push(
+                <Floor 
+                    key={i}
+                    floorNumber={i}
+                    isTopFloor={i === numFloors}
+                />
+            );
         }
 
-        floors.push(
-            <Floor 
-                key={i}
-                floorNumber={i}
-                isTopFloor={isTopFloor}
-            />
-        );
+        return floors;
     }
 
-    // We need to reverse the floors array to get it to display properly,
-    //  we are creating the building upside-down
     return (
         <BuildingElement>
-            {floors.reverse()}
+            {renderFloors(props.numFloors)}
             <Shaft />
         </BuildingElement>
     );
