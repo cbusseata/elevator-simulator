@@ -2,14 +2,15 @@
  * Given some data about current floor, a stop to add, and an array of stops, returns a new array of stops.
  * 
  * @param {number} currentFloor              Current floor the car is at
+ * @param {string} status                    Current status of the car ('moving', 'disembarking', or 'idle')
  * @param {Array}  stops                     Current stop queue
  * @param {number} newStop                   New floor to be queued
  * @param {string} intendedDirectionFromStop The intended direction to head in from the new stop ('up' or 'down')
  * 
  * @return {Array}
  */
-function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFromStop = null) {
-    if (currentFloor === newStop) {
+function addStopToQueue(currentFloor, status, stops = [], newStop, intendedDirectionFromStop = null) {
+    if (currentFloor === newStop && status !== 'moving') {
         // We are already at this floor
         return stops;
     }
@@ -40,7 +41,10 @@ function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFrom
         if (intendedDirectionFromStop !== null && stops[i] === newStop) {
             // In the case we have an intended direction, we might be trying to queue the stop
             //  up for earlier in the queue, so we need to check and bail if we've arrived at the
-            //  index that the stop is queued up at
+            //  index that the stop is queued up at.  We now remove the current floor from the 
+            //  beginning of the queue and return the current array of stops as is.
+            stops.shift();
+
             return stops;
         }
 

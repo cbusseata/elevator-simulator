@@ -21,7 +21,7 @@ export default function carReducer(state = {}, { type, payload }) {
 
     switch (type) {
         case SET_FLOOR_BUTTONS_ACTIVE:
-            if (payload.floorNumber === newState['currentFloor']) {
+            if (payload.floorNumber === newState['currentFloor'] && newState['status'] !== 'moving') {
                 // The car is already at that floor, no change
                 return newState;
             }
@@ -41,7 +41,7 @@ export default function carReducer(state = {}, { type, payload }) {
             buttonState[payload.direction+'ButtonsActive'] = true;
             newState['floorButtonPanels'][payload.floorNumber] = buttonState;
 
-            console.log('SET_FLOOR_BUTTONS_ACTIVE', newState);
+            //console.log('SET_FLOOR_BUTTONS_ACTIVE', newState);
             return newState;
 
         case SET_CAR_PANEL_BUTTON_ACTIVE:
@@ -55,28 +55,24 @@ export default function carReducer(state = {}, { type, payload }) {
             
             newState['buttonPanelButtonsActive'].push(payload.floorNumber);
             
-            console.log('SET_CAR_PANEL_BUTTON_ACTIVE', newState);
+            //console.log('SET_CAR_PANEL_BUTTON_ACTIVE', newState);
             return newState;
             
         case ADD_STOP:
-            if (newState['currentFloor'] === payload.floorNumber && newState['status'] !== 'moving') {
-                // We are already at this floor
-                return newState;
-            }
-
             newState['stops'] = elevator.addStopToQueue(
                 newState['currentFloor'], 
+                newState['status'],
                 newState['stops'], 
                 payload.floorNumber,
                 payload.intendedDirectionFromStop
             );
 
             // If we aren't disembarking, we want to be "moving" if there are any stops in the queue
-            if (newState['status'] !== 'disembarking') {
+            if (newState['status'] !== 'disembarking' && newState['stops'].length > 0) {
                 newState['status'] = 'moving';
             }
             
-            console.log('ADD_STOP', newState);
+            console.log('ADD_STOP', 'payload', payload, 'newState', newState);
             return newState;
 
         case FLOOR_REACHED:
@@ -100,7 +96,7 @@ export default function carReducer(state = {}, { type, payload }) {
                 'downButtonsActive': false
             };
 
-            console.log('FLOOR_REACHED', newState);
+            //console.log('FLOOR_REACHED', newState);
             return newState;
 
         case FINISHED_DISEMBARKING:
@@ -108,7 +104,7 @@ export default function carReducer(state = {}, { type, payload }) {
             //  otherwise, it will be 'idle'
             newState['status'] = newState['stops'].length > 0 ? 'moving' : 'idle';
 
-            console.log('FINISHED_DISEMBARKING', newState);
+            //console.log('FINISHED_DISEMBARKING', newState);
             return newState;
 
         default:
