@@ -9,7 +9,7 @@ import elevatorReducer from './reducers/elevator-reducer';
 const store = createStore(
     elevatorReducer,
     {
-        status: false,
+        status: 'idle',
         currentFloor: 1,
         stops: [],
         buttonPanelButtonsActive: [],

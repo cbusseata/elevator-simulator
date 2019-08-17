@@ -1,21 +1,57 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { floorReached } from '../actions/elevator-actions';
+import { floorReached, finishedDisembarking } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
 function Car(props) {
     const [carBottomY, setCarBottomY] = useState(getCarBottomYAtFloor(props.currentFloor));
+    const [doorStatus, setDoorStatus] = useState('closed');
+    const [doorWidth, setDoorWidth] = useState(30);
 
-    if (props.status) {
-        if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
-            let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
+    switch (props.status) {
+        case 'moving':
+            if (doorStatus !== 'closed') {
+                setDoorStatus('closed');
+            }
+            
+            if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
+                let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
+    
+                window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
+            } else {
+                // Floor reached
+                props.floorReached(props.nextFloor);
+            }
+            break;
 
-            window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
-        } else {
-            // Floor reached
-            props.floorReached(props.nextFloor);
-        }
+        case 'disembarking':
+            if (doorStatus === 'closed') {
+                setDoorStatus('opening');
+            }
+
+            if (doorStatus === 'opening' || doorStatus === 'closing') {
+                if (doorStatus === 'opening' && doorWidth === 0) {
+                    setTimeout(function () {
+                        setDoorStatus('closing');
+                    }, 1000);
+                } else if (doorStatus === 'closing' && doorWidth === 30) {
+                    setDoorStatus('shut'); // Prevent an extra opening pixel
+                    props.finishedDisembarking();
+                } else {
+                    let widthChange = doorStatus === 'opening' ? -1 : 1;
+            
+                    window.requestAnimationFrame(() => setDoorWidth(doorWidth + widthChange));
+                }
+            }
+            break;
+
+        case 'idle':
+        default:
+            if (doorStatus !== 'closed') {
+                setDoorStatus('closed');
+            }
+            break;
     }
 
     return (
@@ -23,8 +59,15 @@ function Car(props) {
             currentFloor={props.currentFloor} 
             style={{bottom: carBottomY+'px'}}
         >
-            <DoorElement side="left" />
-            <DoorElement side="right" />
+            <InnerCarElement />
+            <DoorElement 
+                side="left" 
+                style={{width: doorWidth+'px'}}
+            />
+            <DoorElement 
+                side="right" 
+                style={{width: doorWidth+'px'}}
+            />
         </CarElement>
     );
 }
@@ -42,9 +85,17 @@ const CarElement = styled.div(props => ({
     border: '1px solid #666',
 }));
 
+const InnerCarElement = styled.div`
+    position: absolute;
+    height: 60px;
+    width: 62px;
+    bottom: 1px;
+    background-color: #FFF;
+    left: 8px;
+`;
+
 const DoorElement = styled.div(props => ({
     position: 'absolute',
-    width: '30px',
     height: '60px',
     bottom: '1px',
     backgroundColor: '#000',
@@ -62,6 +113,7 @@ const mapStateToProps = (state, props) => {
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
         floorReached: floorReached,
+        finishedDisembarking: finishedDisembarking,
     }, dispatch);
 };
 

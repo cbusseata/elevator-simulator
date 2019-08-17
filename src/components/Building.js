@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Floor from './Floor';
 import Shaft from './Shaft';
 
+/**
+ * The entire building.
+ */
 function Building(props) {
     const floors = [];
     for (let i = 1; i <= props.numFloors; i++) {
