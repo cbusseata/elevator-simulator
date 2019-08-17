@@ -1,5 +1,15 @@
 'use strict';
 
+/**
+ * Given some data about current floor, a stop to add, and an array of stops, returns a new array of stops.
+ * 
+ * @param {number} currentFloor              Current floor the car is at
+ * @param {Array}  stops                     Current stop queue
+ * @param {number} newStop                   New floor to be queued
+ * @param {string} intendedDirectionFromStop The intended direction to head in from the new stop ('up' or 'down')
+ * 
+ * @return {Array}
+ */
 function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFromStop = null) {
     if (currentFloor === newStop) {
         // We are already at this floor
@@ -78,18 +88,19 @@ function addStopToQueue(currentFloor, stops = [], newStop, intendedDirectionFrom
     // Remove the current floor from the beginning of the queue
     stops.shift();
 
-    //console.log('addStopToQueue', stops);
-
     return stops;
 }
 
+/**
+ * Given 2 stops, determines which direction a car will need to travel to get from the first to the second.
+ * 
+ * @param {number} stop1 First stop (floor number)
+ * @param {number} stop2 Second stop (floor number)
+ * 
+ * @return {string}
+ */
 function getDirectionFromStopToStop(stop1, stop2) {
-    let direction = 'up';
-    if (stop2 - stop1 < 0) {
-        direction = 'down';
-    }
-
-    return direction;
+    return (stop2 - stop1 < 0) ? 'down' : 'up';
 }
 
 module.exports = {

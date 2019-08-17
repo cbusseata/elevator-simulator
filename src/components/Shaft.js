@@ -19,4 +19,5 @@ const ShaftElement = styled.div`
     height: 100%;
 `;
 
-export default Shaft;
+export default Shaft
+;
