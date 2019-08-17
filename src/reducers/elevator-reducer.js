@@ -22,11 +22,13 @@ export default function carReducer(state = {}, { type, payload }) {
     switch (type) {
         case SET_FLOOR_BUTTONS_ACTIVE:
             if (payload.floorNumber === newState['currentFloor']) {
+                // The car is already at that floor, no change
                 return newState;
             }
 
             let buttonState;
             if (newState['floorButtonPanels'][payload.floorNumber]) {
+                // Copy the existing button state
                 buttonState = Object.assign({}, newState['floorButtonPanels'][payload.floorNumber]);
             } else {
                 // Create a new object with the correct default values set
@@ -69,7 +71,7 @@ export default function carReducer(state = {}, { type, payload }) {
                 payload.intendedDirectionFromStop
             );
 
-            // We want to be "moving" if there are any stops in the queue
+            // If we aren't disembarking, we want to be "moving" if there are any stops in the queue
             if (newState['status'] !== 'disembarking') {
                 newState['status'] = 'moving';
             }
@@ -78,9 +80,10 @@ export default function carReducer(state = {}, { type, payload }) {
             return newState;
 
         case FLOOR_REACHED:
-            newState['currentFloor'] = payload.floorNumber;
-            // Basically, pop the next floor off
+            // Basically, pop the next floor off, we've reached it
             newState['stops'] = state['stops'].slice(1);
+            newState['currentFloor'] = payload.floorNumber;
+            // Open the doors
             newState['status'] = 'disembarking';
 
             // Remove from active button panel buttons
@@ -90,6 +93,8 @@ export default function carReducer(state = {}, { type, payload }) {
                     1
                 );
             }
+
+            // No matter what, both the up and down buttons should be inactive on that floor now
             newState['floorButtonPanels'][payload.floorNumber] = {
                 'upButtonsActive': false, 
                 'downButtonsActive': false
@@ -99,7 +104,11 @@ export default function carReducer(state = {}, { type, payload }) {
             return newState;
 
         case FINISHED_DISEMBARKING:
+            // Now that the doors are shut, if it has somewhere else to go, it should be 'moving',
+            //  otherwise, it will be 'idle'
             newState['status'] = newState['stops'].length > 0 ? 'moving' : 'idle';
+
+            console.log('FINISHED_DISEMBARKING', newState);
             return newState;
 
         default:

@@ -10,9 +10,23 @@ import { bindActionCreators } from 'redux';
  * @param {Object} props 
  */
 function Car(props) {
+    /**
+     * The CSS absolute bottom position property of the elevator car within the shaft element,
+     *  and its setter function.
+     */
     const [carBottomY, setCarBottomY] = useState(getCarBottomYAtFloor(props.currentFloor));
-    const [doorStatus, setDoorStatus] = useState('closed');
+
+    /**
+     * The CSS width property of the elevator doors and its setter function.
+     */
     const [doorWidth, setDoorWidth] = useState(30);
+
+    /**
+     * The status of the doors ('closed', 'opening', 'closing', 'shut').  We use 'shut' as an extra
+     *  status in order to keep from beginning a new opening cycle before a finishedDisembarking action
+     *  can be dispatched.
+     */
+    const [doorStatus, setDoorStatus] = useState('closed');
 
     switch (props.status) {
         case 'moving':

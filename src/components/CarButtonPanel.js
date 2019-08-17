@@ -46,39 +46,44 @@ function CarButtonPanel(props) {
         );
     }
 
-    const rows = [];
-    const tds = [];
-    let i = 1;
-    while (i <= props.numFloors) {
-        tds.push(renderElevatorButtonTd(i));
+    /**
+     * Renders the table JSX <tr> elements representing the rows of buttons on the panel.
+     * 
+     * @param {number} numFloors
+     * 
+     * @return {Array} JSX table row elements
+     */
+    const renderButtonPanelTableRows = (numFloors) => {
+        const rows = [];
+        const tds = [];
 
-        if (tds.length === 2) {
-            rows.push(
-                <tr key={i}>
-                    {tds.slice(0)}
-                </tr>
-            );
-
-            // Flush the tds array
-            tds.splice(0);
+        let i = 1;
+        while (i <= numFloors) {
+            tds.push(renderElevatorButtonTd(i));
+    
+            if (tds.length === 2) {
+                rows.push(<tr key={i}>{tds.slice(0)}</tr>);
+    
+                // Flush the tds array
+                tds.splice(0);
+            }
+    
+            i++;
+        }
+    
+        if (tds.length > 0) {
+            // Add any remaining TD elements in a last row
+            rows.push(<tr key={i}>{tds.slice(0)}</tr>);
         }
 
-        i++;
-    }
-
-    if (tds.length > 0) {
-        rows.push(
-            <tr key={i}>
-                {tds.slice(0)}
-            </tr>
-        );
+        return rows.reverse();
     }
 
     return (
         <PanelElement>
             <table>
                 <tbody>
-                    {rows.reverse()}
+                    {renderButtonPanelTableRows(props.numFloors)}
                 </tbody>
             </table>
         </PanelElement>
