@@ -5,14 +5,16 @@ import Shaft from './Shaft';
 
 /**
  * The entire building.
+ * 
+ * @param {Object} props
  */
 function Building(props) {
     /**
-     * Construct the array of jsx Floor elements, given a number of floors to render
+     * Construct the array of JSX Floor elements, given a number of floors to render
      * 
      * @param {number} numFloors 
      * 
-     * @return {Array}
+     * @return {Array} JSX Floor elements
      */
     const renderFloors = (numFloors) => {
         const floors = [];

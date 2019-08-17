@@ -3,6 +3,9 @@ import './App.css';
 import Building from './components/Building';
 import CarButtonPanel from './components/CarButtonPanel';
 
+/**
+ * Render the full app.
+ */
 function App() {
     return (
         <div>

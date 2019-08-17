@@ -5,7 +5,19 @@ import { connect } from 'react-redux';
 import { setFloorButtonsActive, addStop } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
+/**
+ * The button on an individual room.
+ * 
+* @param {Object} props
+ */
 function RoomButtonPanel(props) {
+    /**
+     * Invokes the necessary event methods passed as props when a button on a room's button panel
+     *  is pressed.
+     * 
+     * @param {number} floor 
+     * @param {string} direction 'up' or 'down'
+     */
     const panelButtonPressed = (floor, direction) => {
         props.setFloorButtonsActive(floor, direction);
         props.carAddStop(floor, direction);

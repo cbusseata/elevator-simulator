@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Car from './Car';
 
+/**
+ * Renders the elevator shaft, which contains the car.
+ */
 function Shaft() {
     return (
         <ShaftElement>
@@ -19,5 +22,4 @@ const ShaftElement = styled.div`
     height: 100%;
 `;
 
-export default Shaft
-;
+export default Shaft;

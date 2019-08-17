@@ -2,24 +2,40 @@ import React from 'react';
 import styled from 'styled-components';
 import Room from './Room';
 
+/**
+ * Renders a single floor.
+ * 
+ * @param {Object} props
+ */
 function Floor(props) {
+    /**
+     * Construct the array of JSX Room elements, given a floor number and an indication of 
+     *  whether this is the top floor.
+     * 
+     * @param {number}  floorNumber 
+     * @param {boolean} isTopFloor 
+     * 
+     * @return {Array} JSX Room elements
+     */
+    const renderRooms = (floorNumber, isTopFloor) => {
+        const rooms = [];
+        for (let side of ['left', 'middle', 'right']) {
+            rooms.push(
+                <Room
+                    key={side} // Necessary because this is an array
+                    floorNumber={floorNumber}
+                    side={side} 
+                    onTopFloor={isTopFloor || false}
+                />
+            );
+        }
+
+        return rooms;
+    }
+
     return (
         <FloorElement>
-            <Room 
-                floorNumber={props.floorNumber}
-                side="left" 
-                onTopFloor={props.isTopFloor || false}
-            />
-            <Room 
-                floorNumber={props.floorNumber}
-                side="middle" 
-                onTopFloor={props.isTopFloor || false}
-            />
-            <Room 
-                floorNumber={props.floorNumber}
-                side="right" 
-                onTopFloor={props.isTopFloor || false}
-            />
+            {renderRooms(props.floorNumber, props.isTopFloor)}
         </FloorElement>
     );
 }

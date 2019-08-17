@@ -4,6 +4,11 @@ import { connect } from 'react-redux';
 import { floorReached, finishedDisembarking } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
+/**
+ * Renders the elevator car.
+ * 
+ * @param {Object} props 
+ */
 function Car(props) {
     const [carBottomY, setCarBottomY] = useState(getCarBottomYAtFloor(props.currentFloor));
     const [doorStatus, setDoorStatus] = useState('closed');
@@ -72,6 +77,13 @@ function Car(props) {
     );
 }
 
+/**
+ * Gets the Y value for the absolute 'bottom' CSS property of the car.
+ * 
+ * @param {number} floorNumber 
+ * 
+ * @return {number}
+ */
 function getCarBottomYAtFloor(floorNumber) {
     return ((floorNumber - 1) * 110) + 10;
 }

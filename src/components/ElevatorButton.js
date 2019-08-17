@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * Renders a single elevator button.
+ * 
+ * @param {Object} props
+ */
 function ElevatorButton(props) {
     return (
         <ElevatorButtonElement 

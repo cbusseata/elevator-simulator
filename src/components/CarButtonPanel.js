@@ -5,27 +5,41 @@ import { connect } from 'react-redux';
 import { setCarPanelButtonActive, addStop } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
 
+/**
+ * Renders the button panel for an elevator car.
+ * 
+ * @param {Object} props 
+ */
 function CarButtonPanel(props) {
+    /**
+     * Invokes the necessary event methods passed as props when a button on the car's button panel
+     *  is pressed.
+     * 
+     * @param {number} floorNumber 
+     */
     const panelButtonPressed = (floorNumber) => {
-        if (floorNumber === props.carCurrentFloor) {
-            return;
-        }
-
         props.setCarPanelButtonActive(floorNumber);
         props.carAddStop(floorNumber);
     }
 
-    const renderElevatorButtonTd = (i) => {
+    /**
+     * Renders a single JSX <td> element containing a button.
+     * 
+     * @param {number} floorNumber
+     * 
+     * @return {JSX} PanelTdElement
+     */
+    const renderElevatorButtonTd = (floorNumber) => {
         let lit = false;
-        if (props.buttonsActive.includes(i)) {
+        if (props.buttonsActive.includes(floorNumber)) {
             lit = true;
         }
 
         return (
-            <PanelTdElement key={i}>
+            <PanelTdElement key={floorNumber}>
                 <ElevatorButton 
-                    display={i} 
-                    onClick={() => panelButtonPressed(i)} 
+                    display={floorNumber} 
+                    onClick={() => panelButtonPressed(floorNumber)} 
                     lit={lit}
                 />
             </PanelTdElement>
