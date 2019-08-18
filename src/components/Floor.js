@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Room from './Room';
+import { ROOMS_PER_FLOOR, ROOM_WIDTH, ROOM_HEIGHT } from '../constants';
 
 /**
  * Renders a single floor.
@@ -9,22 +10,23 @@ import Room from './Room';
  */
 function Floor(props) {
     /**
-     * Construct the array of JSX Room elements, given a floor number and an indication of 
-     *  whether this is the top floor.
+     * Construct the array of JSX Room elements, given a floor number, an indication of 
+     *  whether this is the top floor, and the number of rooms to render on that floor.
      * 
      * @param {number}  floorNumber 
      * @param {boolean} isTopFloor 
+     * @param {number}  roomsPerFloor
      * 
      * @return {Array} JSX Room elements
      */
-    const renderRooms = (floorNumber, isTopFloor) => {
+    const renderRooms = (floorNumber, isTopFloor, roomsPerFloor) => {
         const rooms = [];
-        for (let side of ['left', 'middle', 'right']) {
+        for (let i = 1; i <= roomsPerFloor; i++) {
             rooms.push(
                 <Room
-                    key={side} // Necessary because this is an array
+                    key={i} // Necessary because this is an array
                     floorNumber={floorNumber}
-                    side={side} 
+                    side={i === 1 ? 'left' : (i === roomsPerFloor ? 'right' : 'middle')} 
                     onTopFloor={isTopFloor || false}
                 />
             );
@@ -34,18 +36,20 @@ function Floor(props) {
     }
 
     return (
-        <FloorElement>
-            {renderRooms(props.floorNumber, props.isTopFloor)}
+        <FloorElement
+            roomsPerFloor={props.roomsPerFloor}
+        >
+            {renderRooms(props.floorNumber, props.isTopFloor, props.roomsPerFloor)}
         </FloorElement>
     );
 }
 
-const FloorElement = styled.div`
-    grid-column: 1 / span 3;
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: 100px;
-    grid-gap: 10px;
-`;
+const FloorElement = styled.div(props => ({
+    gridColumn: `1 / span ${props.roomsPerFloor}`,
+    display: 'grid',
+    gridTemplateColumns: `repeat(${ROOMS_PER_FLOOR}, ${ROOM_WIDTH}px)`,
+    gridTemplateRows: `${ROOM_HEIGHT}px`,
+    gridGap: `10px`,
+}));
 
 export default Floor;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { floorReached, finishedDisembarking } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
+import { ROOM_WIDTH, ROOM_HEIGHT, CAR_SPEED, DOOR_SPEED } from '../constants';
 
 /**
  * Renders the elevator car.
@@ -10,6 +11,13 @@ import { bindActionCreators } from 'redux';
  * @param {Object} props 
  */
 function Car(props) {
+    /**
+     * Total number of pixels wide each door should be when closed.
+     * 
+     * @type {number}
+     */
+    const fullDoorWidth = (ROOM_WIDTH - 40) / 2;
+
     /**
      * The CSS absolute bottom position property of the elevator car within the shaft element,
      *  and its setter function.
@@ -19,7 +27,7 @@ function Car(props) {
     /**
      * The CSS width property of the elevator doors and its setter function.
      */
-    const [doorWidth, setDoorWidth] = useState(30);
+    const [doorWidth, setDoorWidth] = useState(fullDoorWidth);
 
     /**
      * The status of the doors ('closed', 'opening', 'closing', 'shut').  We use 'shut' as an extra
@@ -35,7 +43,7 @@ function Car(props) {
             }
             
             if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
-                let yChange = props.nextFloor > props.currentFloor ? 2 : -2;
+                let yChange = props.nextFloor > props.currentFloor ? CAR_SPEED : -CAR_SPEED;
     
                 window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
             } else {
@@ -54,11 +62,11 @@ function Car(props) {
                     setTimeout(function () {
                         setDoorStatus('closing');
                     }, 1000);
-                } else if (doorStatus === 'closing' && doorWidth === 30) {
+                } else if (doorStatus === 'closing' && doorWidth === fullDoorWidth) {
                     setDoorStatus('shut'); // Prevent an extra opening pixel
                     props.finishedDisembarking();
                 } else {
-                    let widthChange = doorStatus === 'opening' ? -1 : 1;
+                    let widthChange = doorStatus === 'opening' ? -DOOR_SPEED : DOOR_SPEED;
             
                     window.requestAnimationFrame(() => setDoorWidth(doorWidth + widthChange));
                 }
@@ -105,16 +113,16 @@ function getCarBottomYAtFloor(floorNumber) {
 const CarElement = styled.div(props => ({
     position: 'absolute',
     left: '10px',
-    width: '80px',
-    height: '80px',
+    width: `${ROOM_WIDTH - 20}px`,
+    height: `${ROOM_HEIGHT - 20}px`,
     backgroundColor: '#666',
     border: '1px solid #666',
 }));
 
 const InnerCarElement = styled.div`
     position: absolute;
-    height: 60px;
-    width: 62px;
+    height: ${ROOM_HEIGHT - 40}px;
+    width: ${ROOM_WIDTH - 38}px;
     bottom: 1px;
     background-color: #FFF;
     left: 8px;
@@ -122,7 +130,7 @@ const InnerCarElement = styled.div`
 
 const DoorElement = styled.div(props => ({
     position: 'absolute',
-    height: '60px',
+    height: `${ROOM_HEIGHT - 40}px`,
     bottom: '1px',
     backgroundColor: '#000',
     [props.side === 'left' ? 'right' : 'left']: '8px',

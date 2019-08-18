@@ -8,7 +8,8 @@ import elevatorReducer from './reducers/elevator-reducer';
 const store = createStore(
     elevatorReducer,
     {
-        status: 'idle', // idle, moving, or disembarking
+        status: 'idle', // 'idle', 'moving', or 'disembarking'
+        doorStatus: 'closed', // 'closed', 'opening', or 'closing'
         currentFloor: 1,
         stops: [],
         buttonPanelButtonsActive: [],

@@ -1,25 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 import Car from './Car';
+import { ELEVATOR_SHAFT_COLUMN, ROOMS_PER_FLOOR } from '../constants';
 
 /**
  * Renders the elevator shaft, which contains the car.
+ * 
+ * @param {Object} props
  */
-function Shaft() {
+function Shaft(props) {
     return (
-        <ShaftElement>
+        <ShaftElement numFloors={props.numFloors}>
             <Car />
         </ShaftElement>
     );
 }
 
-const ShaftElement = styled.div`
-    background-color: #333;
-    position: absolute;
-    grid-column: 2 / 3;
-    grid-row: 1 / span 5;
-    width: 100%;
-    height: 100%;
-`;
+const ShaftElement = styled.div(props => ({
+    backgroundColor: '#333',
+    position: 'absolute',
+    gridColumn: `${ELEVATOR_SHAFT_COLUMN} / ${ROOMS_PER_FLOOR}`,
+    gridRow: `1 / span {props.numFloors}`,
+    width: '100%',
+    height: '100%',
+}));
 
 export default Shaft;

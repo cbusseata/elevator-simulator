@@ -4,6 +4,7 @@ import ElevatorButton from './ElevatorButton';
 import { connect } from 'react-redux';
 import { setFloorButtonsActive, addStop } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
+import { ROOM_HEIGHT } from '../constants';
 
 /**
  * The button on an individual room.
@@ -49,7 +50,7 @@ const RoomButtonPanelElement = styled.div(props => ({
     width: '30px',
     height: '70px',
     [props.side === 'left' ? 'right' : 'left']: '10px',
-    top: '15px',
+    top: `${(ROOM_HEIGHT - 70)/2}px`,
 }));
 
 const RoomButtonPanelUpContainerElement = styled.div(props => ({

@@ -3,6 +3,8 @@ import './App.css';
 import Building from './components/Building';
 import CarButtonPanel from './components/CarButtonPanel';
 
+import { NUM_FLOORS, ROOMS_PER_FLOOR } from './constants';
+
 /**
  * Render the full app.
  */
@@ -12,8 +14,11 @@ function App() {
             <div>
                 <h1>Elevator Simulator</h1>
             </div>
-            <Building numFloors={5} />
-            <CarButtonPanel numFloors={5} />
+            <Building 
+                numFloors={NUM_FLOORS} 
+                roomsPerFloor={ROOMS_PER_FLOOR}
+            />
+            <CarButtonPanel numFloors={NUM_FLOORS} />
         </div>
     );
 }
