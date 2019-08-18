@@ -66,6 +66,13 @@ export default function carReducer(state = {}, { type, payload }) {
                 payload.intendedDirectionFromStop
             );
 
+            // Special case - if we are on the floor we are trying to queue a stop for, and the doors are closing,
+            //  opening them back up again
+            if (newState['currentFloor'] === payload.floorNumber && ['disembarking', 'idle'].includes(newState['status'])) {
+                newState['status'] = 'disembarking';
+                newState['doorStatus'] = 'opening';
+            }
+
             // If we aren't disembarking, we want to be "moving" if there are any stops in the queue
             if (newState['status'] !== 'disembarking' && newState['stops'].length > 0) {
                 newState['status'] = 'moving';
