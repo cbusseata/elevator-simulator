@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { floorReached, finishedDisembarking } from '../actions/elevator-actions';
 import { bindActionCreators } from 'redux';
+import { floorReached, finishDisembarking, closeDoors } from '../actions/elevator-actions';
 import { ROOM_WIDTH, ROOM_HEIGHT, CAR_SPEED, DOOR_SPEED } from '../constants';
 
 /**
@@ -30,54 +30,49 @@ function Car(props) {
     const [doorWidth, setDoorWidth] = useState(fullDoorWidth);
 
     /**
-     * The status of the doors ('closed', 'opening', 'closing', 'shut').  We use 'shut' as an extra
-     *  status in order to keep from beginning a new opening cycle before a finishedDisembarking action
-     *  can be dispatched.
+     * Move the car up or down, depending on where the next floor is.
      */
-    const [doorStatus, setDoorStatus] = useState('closed');
+    const handleCarMoving = () => {
+        if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
+            let yChange = props.nextFloor > props.currentFloor ? CAR_SPEED : -CAR_SPEED;
+
+            window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
+        } else {
+            // Floor reached
+            props.floorReached(props.nextFloor);
+        }
+    }
+
+    /**
+     * Handle the animation of the car doors opening/closing.
+     */
+    const handleCarDisembarking = () => {
+        if (props.doorStatus !== 'opening' && props.doorStatus !== 'closing') {
+            // Do nothing
+            return;
+        }
+
+        if (props.doorStatus === 'opening' && doorWidth === 0) {
+            setTimeout(function () {
+                props.closeDoors();
+            }, 1000);
+        } else if (props.doorStatus === 'closing' && doorWidth === fullDoorWidth) {
+            props.finishDisembarking();
+        } else {
+            let widthChange = props.doorStatus === 'opening' ? -DOOR_SPEED : DOOR_SPEED;
+    
+            window.requestAnimationFrame(() => setDoorWidth(doorWidth + widthChange));
+        }
+    }
 
     switch (props.status) {
         case 'moving':
-            if (doorStatus !== 'closed') {
-                setDoorStatus('closed');
-            }
-            
-            if (carBottomY !== getCarBottomYAtFloor(props.nextFloor)) {
-                let yChange = props.nextFloor > props.currentFloor ? CAR_SPEED : -CAR_SPEED;
-    
-                window.requestAnimationFrame(() => setCarBottomY(carBottomY + yChange));
-            } else {
-                // Floor reached
-                props.floorReached(props.nextFloor);
-            }
+            handleCarMoving();
             break;
-
         case 'disembarking':
-            if (doorStatus === 'closed') {
-                setDoorStatus('opening');
-            }
-
-            if (doorStatus === 'opening' || doorStatus === 'closing') {
-                if (doorStatus === 'opening' && doorWidth === 0) {
-                    setTimeout(function () {
-                        setDoorStatus('closing');
-                    }, 1000);
-                } else if (doorStatus === 'closing' && doorWidth === fullDoorWidth) {
-                    setDoorStatus('shut'); // Prevent an extra opening pixel
-                    props.finishedDisembarking();
-                } else {
-                    let widthChange = doorStatus === 'opening' ? -DOOR_SPEED : DOOR_SPEED;
-            
-                    window.requestAnimationFrame(() => setDoorWidth(doorWidth + widthChange));
-                }
-            }
+            handleCarDisembarking();
             break;
-
-        case 'idle':
         default:
-            if (doorStatus !== 'closed') {
-                setDoorStatus('closed');
-            }
             break;
     }
 
@@ -139,6 +134,7 @@ const DoorElement = styled.div(props => ({
 const mapStateToProps = (state, props) => {
     return {
         status: state['status'],
+        doorStatus: state['doorStatus'],
         currentFloor: state['currentFloor'],
         nextFloor: state['stops'] ? state['stops'][0] : null,
     };
@@ -147,7 +143,8 @@ const mapStateToProps = (state, props) => {
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
         floorReached: floorReached,
-        finishedDisembarking: finishedDisembarking,
+        finishDisembarking: finishDisembarking,
+        closeDoors: closeDoors,
     }, dispatch);
 };
 

@@ -3,7 +3,8 @@ import {
     ADD_STOP, 
     FLOOR_REACHED, 
     SET_FLOOR_BUTTONS_ACTIVE, 
-    FINISHED_DISEMBARKING 
+    FINISH_DISEMBARKING ,
+    DOORS_CLOSING,
 } from '../actions/elevator-actions';
 
 const elevator = require('../domain/elevator');
@@ -78,6 +79,7 @@ export default function carReducer(state = {}, { type, payload }) {
             newState['currentFloor'] = payload.floorNumber;
             // Open the doors
             newState['status'] = 'disembarking';
+            newState['doorStatus'] = 'opening';
 
             // Remove from active button panel buttons
             if (newState['buttonPanelButtonsActive'].includes(payload.floorNumber)) {
@@ -95,10 +97,16 @@ export default function carReducer(state = {}, { type, payload }) {
 
             return newState;
 
-        case FINISHED_DISEMBARKING:
+        case FINISH_DISEMBARKING:
             // Now that the doors are shut, if it has somewhere else to go, it should be 'moving',
             //  otherwise, it will be 'idle'
             newState['status'] = newState['stops'].length > 0 ? 'moving' : 'idle';
+            newState['doorStatus'] = 'closed';
+
+            return newState;
+
+        case DOORS_CLOSING:
+            newState['doorStatus'] = 'closing';
 
             return newState;
 

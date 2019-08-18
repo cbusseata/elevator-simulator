@@ -2,7 +2,8 @@ export const SET_CAR_PANEL_BUTTON_ACTIVE = 'elevator:set-button-active';
 export const ADD_STOP = 'elevator:add-stop';
 export const FLOOR_REACHED = 'elevator:floor-reached';
 export const SET_FLOOR_BUTTONS_ACTIVE = 'elevator:set-floor-buttons-active';
-export const FINISHED_DISEMBARKING = 'elevator:finished-disembarking';
+export const FINISH_DISEMBARKING = 'elevator:finish-disembarking';
+export const DOORS_CLOSING = 'elevator:doors-closing';
 
 /**
  * Creates the event that intends to set a button on the elevator car's button panel to active.
@@ -81,8 +82,19 @@ export function setFloorButtonsActive(floorNumber, direction) {
  * 
  * @return {Object}
  */
-export function finishedDisembarking() {
+export function finishDisembarking() {
     return {
-        type: FINISHED_DISEMBARKING
+        type: FINISH_DISEMBARKING,
+    }
+}
+
+/**
+ * Creates the event that notifies that the car has finished unloading and the doors are ready to close.
+ * 
+ * @return {Object}
+ */
+export function closeDoors() {
+    return {
+        type: DOORS_CLOSING,
     }
 }
