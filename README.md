@@ -1,4 +1,4 @@
-# Elevator Simulator (WIP)
+# Elevator Simulator
 
 This is a basic elevator simulator using React.
 
